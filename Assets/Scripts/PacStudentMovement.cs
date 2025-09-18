@@ -8,12 +8,14 @@ public class PacStudentMovement : MonoBehaviour
     public float tileSize = 1f;
     private float distanceSinceLastStep = 0f;
 
+    // Set showcase positions
     [Header("Targets")]
     public Transform topLeft;
     public Transform topRight;
     public Transform bottomLeft;
     public Transform bottomRight;
 
+    // Set speed
     [Header("Speed")]
     public float speed = 2f;
 
@@ -21,6 +23,7 @@ public class PacStudentMovement : MonoBehaviour
     private Vector3[] corners;
     private int currentTargetIndex = 0;
 
+    // Set anim and audio
     [Header("Anim & Audio")]
     public Animator animator;
     public AudioSource moveAudio;
@@ -37,59 +40,32 @@ public class PacStudentMovement : MonoBehaviour
         transform.position = corners[0];
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    Vector3 target = corners[currentTargetIndex];
-    //    Vector3 direction = (target - transform.position).normalized;
-
-    //    // 移动 PacStudent
-    //    transform.position += direction * speed * Time.deltaTime;
-
-    //    // 播放动画，根据方向切换
-    //    if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-    //        animator.SetInteger("Direction", direction.x > 0 ? 3 : 2); // 右 =3, 左 =2
-    //    else
-    //        animator.SetInteger("Direction", direction.y > 0 ? 0 : 1); // 上 =0, 下 =1
-
-
-
-    //    // 到达目标点，切换下一个
-    //    if (Vector3.Distance(transform.position, target) < 0.01f)
-    //    {
-    //        transform.position = target;
-    //        currentTargetIndex = (currentTargetIndex + 1) % corners.Length;
-    //    }
-    //}
-
     void Update()
     {
+        // get destination
         Vector3 target = corners[currentTargetIndex];
         Vector3 direction = (target - transform.position).normalized;
 
-        // 计算本帧移动距离
         float moveThisFrame = speed * Time.deltaTime;
         transform.position += direction * moveThisFrame;
 
-        // 累计移动距离
         distanceSinceLastStep += moveThisFrame;
 
-        // 每走 tileSize 距离就播放一次声音
+        // play walk sfx every step
         if (distanceSinceLastStep >= tileSize)
         {
             if (moveAudio != null)
                 moveAudio.Play();
 
-            distanceSinceLastStep = 0f; // 重置计数
+            distanceSinceLastStep = 0f; 
         }
 
-        // 播放动画
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
             animator.SetInteger("Direction", direction.x > 0 ? 3 : 2);
         else
             animator.SetInteger("Direction", direction.y > 0 ? 0 : 1);
 
-        // 到达目标点，切换下一个
+        // fix position
         if (Vector3.Distance(transform.position, target) < 0.01f)
         {
             transform.position = target;

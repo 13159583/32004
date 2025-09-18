@@ -33,7 +33,7 @@ public class PacStudentController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            animator.SetTrigger("DeadTrigger");
+            animator.SetTrigger("DeadTrigger"); // dead
         }
     }
 }
